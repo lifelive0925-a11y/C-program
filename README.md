@@ -18,14 +18,11 @@
 | `.gitignore` | Git 忽略文件配置 |
 | `.gitattributes` | 统一换行符为 LF |
 
-> 每个 `.c` 里都有自己的 `main()`，所以它们是**六个互相独立的小程序**，
-> 不能链接成一个可执行文件。`Makefile` 会为每个 `.c` 单独生成一个同名的 `.exe`。
-
 ## 环境依赖
 
 - **编译器**：GCC（Windows 下推荐 [MSYS2](https://www.msys2.org/) 自带的 `gcc`；Linux/macOS 用系统自带的 GCC/Clang）
 - **构建工具**：GNU Make
-- **编辑器**：VS Code（可选）
+- **编辑器**：VS Code
 
 Windows 下安装 MSYS2 后，把 `C:\msys64\ucrt64\bin` 和 `C:\msys64\usr\bin` 加入 `PATH`，
 这样 `gcc` 和 `make` 都能直接在终端里使用。
@@ -96,15 +93,7 @@ make help
 | `make list` | 列出所有程序名 |
 | `make clean` | 删除所有编译产物 |
 | `make rebuild` | 先 `clean` 再全量编译 |
-| `make help` | 显示帮助 |
-
-## 在 VS Code 中使用
-
-1. 打开本文件夹（`File > Open Folder`）。
-2. 按 `Ctrl + Shift + B` 可以直接编译**当前打开的** `.c` 文件，生成同名的 `.exe`。
-3. 也可以直接使用终端里的 `make` 命令（推荐，见上一节）。
-
-`tasks.json` 已配置为使用 `gcc`，请确保 `gcc` 在 `PATH` 中，否则 VS Code 会提示找不到命令。
+| `make help` | 显示帮助 | 
 
 ## 编译选项说明
 
@@ -122,12 +111,3 @@ LDFLAGS := -lm
 - `-lm`：链接数学库（`square_root.c` 用到 `fabs`）
 
 当前所有源文件编译时均为**零警告**。
-
-## 备注
-
-- 自定义函数统一加 `my_` 前缀（`my_strlen`、`my_strcpy`、`my_memcpy`），
-  避免与标准库 `<string.h>` 中的同名函数冲突。
-- Windows 下如果 `make` 报 `Cannot create temporary file in C:\WINDOWS\: Permission denied`，
-  这是因为子进程拿不到可写的临时目录；本仓库的 `Makefile` 已通过 `.tmp` 目录做了处理，正常不需要手动干预。
-- 仓库路径如果包含中文（例如 `C:\Users\xxx\Desktop\c语言`），建议保持使用相对路径，
-  不要给 `TMPDIR` 传绝对路径，否则可能出现编码问题。
