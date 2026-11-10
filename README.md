@@ -13,6 +13,8 @@
 | `my_copy.c` | 手写实现 `strncpy` 风格的定长拷贝（`my_copy`） |
 | `reverse.c` | 把一个 32 位无符号整数的二进制位倒序（`reverse_bits`） |
 | `square_root.c` | 用牛顿迭代法求平方根 |
+| `reverse_string.c`| 用指针将字符串反向 |
+| `hermite.c` | 厄密多项式递归求值 |
 | `Makefile` | 自动化编译脚本 |
 | `.vscode/tasks.json` | VS Code 一键编译任务（使用 gcc） |
 | `.gitignore` | Git 忽略文件配置 |
