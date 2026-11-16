@@ -60,63 +60,10 @@ gcc -std=c11 -Wall -Wextra key.c test_key.c -o test_key.exe
 
 ```text
 short   : SHORT
-long    : NONE
-release : SHORT
+long    : LONG
+release : RELEASE
 bounce  : NONE
 ```
-
-`short` 和 `bounce` 正常；`long` 和 `release` 不正常，原因见下一节。
-
-## 代码检查结论
-
-`key.c` / `key.h` 没有修改。下面两处是当前测试失败的原因。
-
-### 问题 1：长按判断用错了变量（`key.c:40`）
-
-当前：
-
-```c
-if (dt_ms >= 1000 && !k->long_sent)
-```
-
-`dt_ms` 是“本次 tick 的间隔”，每次只有 10ms，永远不会大于等于 1000，所以长按永远不触发。
-
-应改成累计时间：
-
-```c
-if (k->press_ms >= 1000 && !k->long_sent)
-```
-
-### 问题 2：长按释放判断用错了变量（`key.c:48`）
-
-当前：
-
-```c
-case KEY_LONG :
-    if(!k->state)
-    {
-        k->state = KEY_IDLE;
-        return KEY_EV_RELEASE;
-    }
-```
-
-`k->state` 此时等于 `KEY_LONG`（枚举值 2），`!k->state` 永远是 false，所以 `KEY_EV_RELEASE` 永远不会发出。
-
-应判断电平：
-
-```c
-if (!k->stable)
-```
-
-### 问题 3：`KEY_LONG` 分支末尾缺少 `break;`（`key.c:47-53`）
-
-当前 `KEY_LONG` 是最后一个 case，不会 fallthrough，所以暂时不报错；但以后在它后面加 case 就会串行执行。建议补上 `break;`。
-
-### 建议（不影响当前测试）
-
-- `key_init` / `key_tick` 可以加 `if (!k) return ...;`，防止空指针。
-- 如果要“长按连发”，在 `KEY_LONG` 里加 `repeat_ms`，每 200ms 返回一次 `KEY_EV_REPEAT`。
-- `key_init` 里 `raw = 1` 表示上电时按键已按下，状态应同步为 `KEY_PRESSED`；当前实现统一进 `KEY_IDLE`，第一次 tick 才切换，问题不大，但语义上可以更严谨。
 
 ## 测试说明
 
@@ -130,19 +77,12 @@ if (!k->stable)
 
 ```text
 short   : SHORT    ✅
-long    : NONE     ❌ 问题 1
-release : SHORT    ❌ 问题 1 + 问题 2
+long    : LONG     ✅
+release : RELEASE  ✅
 bounce  : NONE     ✅
 ```
 
-修好问题 1、2 后，预期变成：
 
-```text
-short   : SHORT
-long    : LONG
-release : RELEASE
-bounce  : NONE
-```
 
 ## 踩坑记录（示例）
 
