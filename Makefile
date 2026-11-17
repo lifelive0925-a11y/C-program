@@ -9,7 +9,7 @@
 #    make strlen          只编译 strlen.c  ->  strlen.exe
 #    make run-strlen      编译并立即运行   ->  make run-strlen
 #    make list            列出所有可编译的程序名
-#    make clean           删除所有生成的 .exe 和 .o
+#    make clean           删除所有生成的 .exe / .o / .pdb / .obj 和 .tmp
 #    make rebuild         先清理再全量编译
 #    make help            显示帮助
 #
@@ -99,8 +99,8 @@ list:
 
 .PHONY: clean
 clean:
-	@echo "  CLEAN 删除所有 .exe / .o 和 .tmp 里的临时文件"
-	@rm -f *.exe *.o
+	@echo "  CLEAN 删除所有 .exe / .o / .pdb / .obj 和 .tmp 里的临时文件"
+	@rm -f *.exe *.o *.obj *.pdb
 	@rm -rf .tmp
 
 .PHONY: rebuild
@@ -114,7 +114,7 @@ help:
 	@echo "make <名字>       编译单个文件，如 make strlen"
 	@echo "make run-<名字>   编译并运行，如 make run-strlen"
 	@echo "make list         列出所有可编译的程序名"
-	@echo "make clean        删除所有 .exe 和 .o"
+	@echo "make clean        删除所有 .exe / .o / .pdb / .obj 和 .tmp"
 	@echo "make rebuild      先 clean 再全量编译"
 	@echo "make help         显示本帮助"
 	@echo ""
