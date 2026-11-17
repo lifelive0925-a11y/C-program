@@ -19,6 +19,7 @@
 | `my_swap.c` | 手写实现两个值交换 |
 | `callback.c` | 回调表
 | `sing_tax.c` | 个人所得税计算
+| `matmult.c` | 矩阵乘法
 | `Makefile` | 自动化编译脚本 |
 | `.vscode/tasks.json` | VS Code 一键编译任务（使用 gcc） |
 | `.gitignore` | Git 忽略文件配置 |
